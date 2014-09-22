@@ -22,6 +22,7 @@ You can stop the recording manually with a good 'ol keyboard interrupt, but it'l
 TODO
 ----
 
-* General code cleaning and such
+* General code cleaning and such, handle errors better
+* Better argument parsing
 * Add a way to select a particular window instead of guessing that the first one is right
 * Do the processing to make a video
