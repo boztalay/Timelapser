@@ -17,7 +17,7 @@ Where
 * INTERVAL_IN_SECS is the interval between frame captures, in seconds
 * OUTPUT_DIR is an empty or nonexistant directory to store the frames
 
-You can stop the recording with a good 'ol keyboard interrupt
+You can stop the recording manually with a good 'ol keyboard interrupt, but it'll stop automatically when the window it's recording is closed
 
 TODO
 ----
