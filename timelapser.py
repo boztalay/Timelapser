@@ -82,5 +82,5 @@ except KeyboardInterrupt:
     print "Cleaning up and exiting..."
 
 infoFile.write("Recording ended: " + time.strftime("%Y-%m-%d %H:%M") + "\n\n")
-infoFile.write("Captured " + str(currentImage) + " frames\n")
+infoFile.write("Captured " + str(currentImage) + " frames at a " + str(captureInterval) + " second interval\n")
 infoFile.close()
