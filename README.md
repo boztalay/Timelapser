@@ -19,11 +19,11 @@ Where
 
 You can stop the recording manually with a good 'ol keyboard interrupt, but it'll stop automatically when the window it's recording is closed
 
+NOTE: You must install ffmpeg if you want Timelapser to actually generate the final video!
+
 TODO
 ----
 
 * General code cleaning and such, handle errors better
 * Better argument parsing
 * Add a way to select a particular window instead of guessing that the first one is right
-* Do the processing to make a video
-* Even out the number of digits used for the frame numbers

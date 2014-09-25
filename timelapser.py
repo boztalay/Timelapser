@@ -73,14 +73,26 @@ try:
             subprocess.check_call("screencapture -l" + str(windowId) + "-o -x " + frameName, shell=True)
             print "Captured frame " + str(currentImage)
         except subprocess.CalledProcessError as e:
-            print "Got an exception during recording, cleaning up and exiting..."
+            print "Got an exception during recording, cleaning up..."
             break
 
         currentImage += 1
         time.sleep(captureInterval)
 except KeyboardInterrupt:
-    print "Cleaning up and exiting..."
+    print "Cleaning up..."
 
 infoFile.write("Recording ended: " + time.strftime("%Y-%m-%d %H:%M") + "\n\n")
 infoFile.write("Captured " + str(currentImage) + " frames at a " + str(captureInterval) + " second interval\n")
 infoFile.close()
+
+print "Generating the video..."
+
+videoName = os.path.split(outputDir)[1]
+os.chdir(outputDir)
+
+try:
+    subprocess.check_call("ffmpeg -i frame-%d.png -c:v libx264 -pix_fmt yuv420p -s 1280x720 " + videoName + ".mp4", shell=True)
+except subprocess.CalledProcessError as e:
+    print "There was a problem generating the video: " + str(e)
+
+print "Done!"
