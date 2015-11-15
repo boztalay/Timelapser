@@ -31,30 +31,43 @@ if len(os.listdir(outputDir)) > 0:
 # Getting the window id
 
 try:
-    windowsOutput = subprocess.check_output("osascript -e 'tell app \"" + programName + "\" to windows'", shell=True)
-    windows = windowsOutput.split(", ")
+    windowIdsOutput = subprocess.check_output("osascript -e 'tell app \"" + programName + "\" to id of windows'", shell=True)
+    windowIds = windowIdsOutput.split(", ")
+    windowNamesOutput = subprocess.check_output("osascript -e 'tell app \"" + programName + "\" to name of windows'", shell=True)
+    windowNames = windowNamesOutput.split(", ")
 except subprocess.CalledProcessError as e:
-    print "Something went wrong identifying the window to record: " + str(e)
+    print "Something went wrong identifying the windows available to record: " + str(e)
     sys.exit(1)
 
-windowPattern = re.compile("^window id (-?[0-9]+)$")
+validWindowIdsAndNames = []
+for i, windowId in enumerate(windowIds):
+    windowName = windowNames[i]
+    if windowId != -1:
+        validWindowIdsAndNames.append((windowId, windowName))
 
-validWindowIds = []
-for window in windows:
-    windowMatch = windowPattern.match(window.strip())
-    if windowMatch:            
-        windowId = int(windowMatch.group(1))
-        if windowId != -1:
-            validWindowIds.append(windowId)
-
-if len(validWindowIds) <= 0:
-    print "Couldn't find any open windows for " + programName
+if len(validWindowIdsAndNames) <= 0:
+    print "Couldn't find any valid windows for " + programName
     sys.exit(1)
 
-windowId = validWindowIds[0]
+if len(validWindowIdsAndNames) == 1:
+    windowId = validWindowIdsAndNames[0][0]
+else:
+    print "Found more than one window, pick from the following list:"
+    for i, windowInfo in enumerate(validWindowIdsAndNames):
+        print str(i) + ". " + windowInfo[1]
 
-if len(validWindowIds) > 1:
-    print "WARNING: Found more than one open window for " + programName + ", guessing the first window (" + str(windowId) + ") is correct!"
+    choiceStr = raw_input("Choice: ")
+    try:
+        choiceIndex = int(choiceStr)
+    except ValueError:
+        print "Yo, " + choiceStr + " isn't a number."
+        sys.exit(1)
+
+    if choiceIndex < 0 or choiceIndex >= len(validWindowIdsAndNames):
+        print "Hey, " + choiceStr + " isn't a valid choice."
+        sys.exit(1)
+
+    windowId = validWindowIdsAndNames[choiceIndex][0]
 
 # Writing the info file
 
@@ -96,3 +109,4 @@ except subprocess.CalledProcessError as e:
     print "There was a problem generating the video: " + str(e)
 
 print "Done!"
+
